@@ -1,48 +1,73 @@
+// Node reference
+const result = document.querySelector('.result');
+const playerScoreDisplay = document.querySelector('.player');
+const computerScoreDisplay = document.querySelector('.computer');
+
+
+let playerScoreCount = 0;
+let computerScoreCount = 0;
+
 const computerPlay = () => {
     const HAND = ["rock", "paper", "scissors"];
     return HAND[Math.floor(Math.random() * 3)];
 };
 
-const playerPlay = () => prompt("Please pick a hand:\nROCK | PAPER | SCISSORS");
+
+const isDraw = function(playerSelection, computerSelection) {
+    return playerSelection === computerSelection;
+}
 
 
-function playRound(playerSelection, computerSelection) {
-    const LOSE = `You Lose! ${computerSelection} beats ${playerSelection}`;
-    const WIN = `You Win! ${playerSelection} beats ${computerSelection}`;
+const playRound = function(playerSelection, computerSelection) {
+    if (playerSelection.toLowerCase() === "rock") 
+        return (computerSelection === "scissors" ? true : false);
 
-    if (playerSelection.toLowerCase() == computerSelection)
-        return "Game Draw!";
+    if (playerSelection.toLowerCase() === "paper")
+        return (computerSelection === "rock" ? true : false);
+
+    if (playerSelection.toLowerCase() === "scissors")
+    return (computerSelection === "paper" ? true : false);
+}
+
+const resetScore = function() {
+    playerScoreCount = 0;
+    computerScoreCount = 0;
+    playerScoreDisplay.innerText = `${playerScoreCount}`;
+    computerScoreDisplay.innerText = `${computerScoreCount}`;
+}
+
+const play = function(event) {
+	const playerSelection = this.value;
+    if (isDraw(playerSelection, computerPlay())) {
+        result.innerText = "Round Draw!";
+        return;
+    }
     
-    if (playerSelection.toLowerCase() === "rock") {
-        if (computerSelection === "scissors")
-            return WIN;
-        else
-            return LOSE;
-    }
-    if (playerSelection.toLowerCase() === "paper") {
-        if (computerSelection === "rock")
-            return WIN;
-        else
-            return LOSE;
+    if (playRound(playerSelection, computerPlay())) {
+        playerScoreCount++;
+        playerScoreDisplay.innerText = `${playerScoreCount}`;
+        result.innerText = "You win!";
+    } else {
+        computerScoreCount++;
+        computerScoreDisplay.innerText = `${computerScoreCount}`;
+        result.innerText = "You lose!"
     }
 
-    if (playerSelection.toLowerCase() === "scissors") {
-        if (computerSelection === "paper")
-            return WIN;
-        else
-            return LOSE;
-    }
-
-    return "Incorrect input try again!"
-}
-
-
-
-function game() {
-    for (let i = 0; i < 5; i++) {
-        console.log(playRound(playerPlay(), computerPlay()));
+    if (playerScoreCount === 5) {
+        result.innerHTML = "Victory";
+        resetScore();
+        return
+    } 
+    if (computerScoreCount === 5){
+        result.innerText = "Defeat";
+        resetScore();
+        return;
     }
 }
 
-game();
+const button = document.querySelectorAll('.btn');
+button.forEach(btn => {
+	btn.addEventListener('click', play);
+    result.innerText = "Pick a hand";
+});
 
