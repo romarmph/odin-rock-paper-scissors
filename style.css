@@ -28,6 +28,8 @@ h1 {
 .btn {
     margin: 24px;
     height: 128px;
+    margin: 36px;
+    height: 144px;
     border: solid 4px black;
     border-radius: 12px;
     box-shadow: 0 10px 24px rgb(187, 191, 197);
